@@ -1,0 +1,28 @@
+{
+  "name": "mpd-util",
+  "version": "0.0.1",
+  "description": "indexdb 简化,浏览器中复制文本和元素，拨打电话等",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "webpack --config config/prod.js",
+    "bundle": "webpack --config config/bundle.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:ma125120/mpd-util.git"
+  },
+  "keywords": [
+    "copy",
+    "js",
+    "callPhone",
+    "db"
+  ],
+  "author": "马鹏达",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "webpack": "^4.28.4",
+    "webpack-cli": "^3.2.1",
+    "babel-loader": "7"
+  }
+}
