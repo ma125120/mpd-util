@@ -153,3 +153,19 @@ setStore({ name: 'test' }, 'info');
 import { getStore } from 'mpd-util'
 getStore('info');
 ```
+
+### 3.5 避免空值
+```javascript
+// params data: 原始值
+// keys: 键名，多个 键名以逗号隔开，
+// defaultValue: 最后返回的默认值
+// debug: 是否开启调试模式
+getSafe(data: any, keys: string | number, defaultValue: any, debug: boolean): any 
+```
+
+```javascript
+// 调用方式
+import { getSafe } from 'mpd-util'
+console.log(getSafe({}, 's, 1', 1))
+
+```
