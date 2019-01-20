@@ -12,9 +12,9 @@ npm i -S mpd-util
 ### 3.1 indexDB
 
 #### 3.1.1 实例化
-``` db.openDb(dbName: string, dbVersion: Number): Promise; ```
+``` db.openDb(dbName: string): Promise; ```
 ```javascript
-var db = new MyDb(dbName, dbVersion);
+var db = new MyDb(dbName);
 ```
 
 #### 3.1.2 打开某个集合(objectStore)
@@ -29,6 +29,8 @@ db.openDb('info')
 
 #### 3.1.3 增加或修改数据
 ``` db.setData(data: any, key: string): void; ```
+
+第二个参数为主键名，默认_id,必须指定，否则可能无法检索数据。
 ```javascript
 db.openDb('info')
 .then(db => {

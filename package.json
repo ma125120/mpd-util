@@ -1,8 +1,8 @@
 {
   "name": "mpd-util",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "description": "indexdb 简化,浏览器中复制文本和元素，拨打电话等",
-  "main": "lib/index.js",
+  "main": "src/index.js",
   "scripts": {
     "build": "webpack --config config/prod.js",
     "bundle": "webpack --config config/bundle.js"
@@ -21,8 +21,13 @@
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.2.2",
+    "babel-core": "^6.26.3",
+    "babel-loader": "7",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-2": "^6.24.1",
+    "transform-runtime": "0.0.0",
     "webpack": "^4.28.4",
-    "webpack-cli": "^3.2.1",
-    "babel-loader": "7"
+    "webpack-cli": "^3.2.1"
   }
 }

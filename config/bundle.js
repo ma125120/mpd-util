@@ -7,8 +7,8 @@ function resolve (dir) {
 module.exports = {
   mode: 'production',
   entry: {
-    db: './src/db.js',
-    fn: './src/fn.js',
+    // db: './src/db.js',
+    // fn: './src/fn.js',
   },
   output: {
     path: path.resolve(__dirname, '../lib'),

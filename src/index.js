@@ -1,11 +1,10 @@
-import {
-  copy,
-  setStore,
-  getStore,
-  callPhone,
-} from './fn.js';
+import copy from './dom/copy.js';
+import callPhone from './dom/phone.js';
+import browser from './dom/browser.js';
+ 
+import getSafe from './fn/getSafe.js'
 
-import MyDb from './db.js';
+import MyDb, { getStore, setStore } from './h5/db.js';
 
 export {
   copy,
@@ -13,4 +12,6 @@ export {
   getStore,
   callPhone,
   MyDb,
+  browser,
+  getSafe,
 }

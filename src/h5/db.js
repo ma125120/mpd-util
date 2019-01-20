@@ -1,18 +1,38 @@
 
+var getDbVersion = () => {
+  return window.localStorage.dbVersion || 1;
+}
 class MyDb {
-  constructor(dbName, dbVersion) {
+  constructor(dbName) {
     this.dbName = dbName;
-    this.dbVersion = dbVersion;
+    this.dbVersion = getDbVersion();
+  }
+  handleNone(resolve) {
+    var newVersion = +getDbVersion() + 1
+    window.localStorage.dbVersion = newVersion;
+    this.dbVersion = newVersion;
+    console.log(newVersion)
+    this.openDb(this.storeName)
+    .then(db => {
+      this.db = db;
+      resolve(db);
+    })
   }
 
   openDb(storeName) {
-    var { dbName, dbVersion, } = this;
+    var { dbName, } = this;
+    var dbVersion = getDbVersion();
     this.storeName = storeName;
+    
     return new Promise((resolve, reject) => {
       var request = indexedDB.open(dbName, dbVersion);
-      request.onerror = reject.bind(null, '打开indexdb时发生了错误');
-      request.onsuccess = () => {
+      request.onsuccess = () => {  
         var db = request.result;
+        if (!db.objectStoreNames.contains(storeName)) {
+          db.close();
+          this.handleNone(resolve);
+          return ;
+        }
         this.db = db;
         resolve(this);
       };
@@ -23,6 +43,11 @@ class MyDb {
         }
         db.createObjectStore(storeName)
       };
+      request.onerror = (err) => {
+        // console.log(err);
+        this.handleNone(resolve);
+        // reject(err);
+      }
     });
   }
 
@@ -41,15 +66,28 @@ class MyDb {
     });
   }
 
-  setData(data = {}, idKey = '_id') {
+  _setData(data = {}, idKey = '_id') {
     var { db, storeName, } = this;
     var store = this.getStore();
     var request = store.put(data, data[idKey] || 1);
-    request.onerror = err => { console.error(err) };
+    request.onerror = err => {
+      this.handleError(err, '_setData')
+    };
     request.onsuccess = err => {
       // console.log(`Successfully stored ${data._id} in wasm cache`)
     };
   }
+
+  setData(data = {}, idKey = '_id') {
+    if (Array.isArray(data)) {
+      data.map(v => {
+        this._setData(v, idKey)
+      });
+    } else {
+      this._setData(data, idKey)
+    }
+  }
+
   delData(_id) {
     var { db, storeName, } = this;
     var store = this.getStore();
@@ -100,4 +138,24 @@ class MyDb {
   }
 }
 
+function getStore(key = 'info') {
+  var data = window.localStorage.getItem(key);
+  try {
+    data = JSON.parse(data);
+  } catch (err) { console.log(err) }
+  return data;
+}
+
+function setStore(obj, key = 'info') {
+  if (typeof obj === 'object') {
+    obj = JSON.stringify(obj);
+  }
+  return window.localStorage.setItem(key, obj);
+}
+
 export default MyDb
+
+export {
+  getStore,
+  setStore,
+}
