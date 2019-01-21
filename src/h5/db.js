@@ -3,15 +3,18 @@ var getDbVersion = () => {
   return window.localStorage.dbVersion || 1;
 }
 class MyDb {
-  constructor(dbName) {
+  constructor(dbName, dbVersion) {
     this.dbName = dbName;
-    this.dbVersion = getDbVersion();
+    this.dbVersion = dbVersion || getDbVersion();
+    if (dbVersion) {
+      window.localStorage.dbVersion = dbVersion;
+    }
   }
   handleNone(resolve) {
     var newVersion = +getDbVersion() + 1
     window.localStorage.dbVersion = newVersion;
     this.dbVersion = newVersion;
-    console.log(newVersion)
+
     this.openDb(this.storeName)
     .then(db => {
       this.db = db;
@@ -23,10 +26,10 @@ class MyDb {
     var { dbName, } = this;
     var dbVersion = getDbVersion();
     this.storeName = storeName;
-    
+
     return new Promise((resolve, reject) => {
       var request = indexedDB.open(dbName, dbVersion);
-      request.onsuccess = () => {  
+      request.onsuccess = () => {
         var db = request.result;
         if (!db.objectStoreNames.contains(storeName)) {
           db.close();
