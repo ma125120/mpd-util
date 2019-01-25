@@ -12,9 +12,14 @@ npm i -S mpd-util
 ### 3.1 indexDB
 
 #### 3.1.1 实例化
-``` db.openDb(dbName: string): Promise; ```
+``` db.openDb(dbName: string, isReload?: boolean, idKey?: string, dbVersion?: string): Promise; ```
+
 ```javascript
-var db = new MyDb(dbName);
+// dbName: 数据库名
+// isReload: 数据库更新时是否刷新网页，建议开启（可选）
+// idKey： 主键名（可选）
+// dbVersion：数据库版本（可选）
+var db = new MyDb(dbName, isReload, idKey, dbVersion);
 ```
 
 #### 3.1.2 打开某个集合(objectStore)
@@ -160,7 +165,7 @@ getStore('info');
 // keys: 键名，多个 键名以逗号隔开，
 // defaultValue: 最后返回的默认值
 // debug: 是否开启调试模式
-getSafe(data: any, keys: string | number, defaultValue: any, debug: boolean): any 
+getSafe(data: any, keys: string | number, defaultValue: any, debug: boolean): any
 ```
 
 ```javascript

@@ -64,8 +64,3 @@ export function formatTime(time, option) {
     )
   }
 }
-
-export {
-  parseTime,
-  formatTime,
-}
