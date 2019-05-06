@@ -113,7 +113,7 @@ db.openDb('info')
 
 ### 3.2 复制文本或元素
 ```javascript
-// @params selector: String 已存在的dom元素选择器
+// @params selector: String 已存在的dom元素选择器字符串（可以直接在DOM中放置一个空元素，来实现复制字符串的功能）
 // @params text: String 在文本后面添加的文字
 // @params isHtml: Boolean 是否复制dom元素的html结构,默认false
 
