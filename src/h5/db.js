@@ -1,36 +1,40 @@
 
 var getDbVersion = () => {
-  return window.localStorage.dbVersion || 1;
+  return Number(window.localStorage.dbVersion) || 1;
 }
 class MyDb {
-  constructor(dbName) {
+  constructor(dbName, isReload, idKey, dbVersion) {
     this.dbName = dbName;
-    this.dbVersion = getDbVersion();
+    this.isReload = isReload;
+    idKey && (this.idKey = idKey);
+    this.dbVersion = dbVersion || getDbVersion();
+    if (dbVersion) {
+      window.localStorage.dbVersion = dbVersion;
+    }
   }
-  handleNone(resolve) {
+  handleNone(resolve, reject, err) {
     var newVersion = +getDbVersion() + 1
     window.localStorage.dbVersion = newVersion;
     this.dbVersion = newVersion;
-    console.log(newVersion)
-    this.openDb(this.storeName)
-    .then(db => {
-      this.db = db;
-      resolve(db);
-    })
+
+    if (this.isReload) {
+      location.reload();
+    }
   }
 
   openDb(storeName) {
     var { dbName, } = this;
     var dbVersion = getDbVersion();
     this.storeName = storeName;
-    
+
     return new Promise((resolve, reject) => {
       var request = indexedDB.open(dbName, dbVersion);
-      request.onsuccess = () => {  
+      request.onsuccess = () => {
         var db = request.result;
         if (!db.objectStoreNames.contains(storeName)) {
           db.close();
           this.handleNone(resolve);
+          reject();
           return ;
         }
         this.db = db;
@@ -44,8 +48,10 @@ class MyDb {
         db.createObjectStore(storeName)
       };
       request.onerror = (err) => {
-        // console.log(err);
+        console.log(err);
         this.handleNone(resolve);
+        reject(err);
+        // ;
         // reject(err);
       }
     });
@@ -69,7 +75,7 @@ class MyDb {
   _setData(data = {}, idKey = '_id') {
     var { db, storeName, } = this;
     var store = this.getStore();
-    var request = store.put(data, data[idKey] || 1);
+    var request = store.put(data, data[this.idKey || idKey] || 1);
     request.onerror = err => {
       this.handleError(err, '_setData')
     };
@@ -101,7 +107,13 @@ class MyDb {
   }
   getStore() {
     var { db, storeName, } = this;
-    var store = db.transaction([storeName], 'readwrite').objectStore(storeName);
+    var store;
+    try {
+      store = db.transaction([storeName], 'readwrite').objectStore(storeName);
+    } catch(err) {
+      console.log(err)
+    }
+
     return store;
   }
   clear() {

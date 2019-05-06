@@ -1,6 +1,6 @@
 {
   "name": "mpd-util",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "indexdb 简化,浏览器中复制文本和元素，拨打电话等",
   "main": "src/index.js",
   "scripts": {
